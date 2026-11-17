@@ -1,0 +1,300 @@
+/* MAYAACC — Step 0: Foundation
+   theme.css — shared theme. Navy blue identity, blue M logo.
+   Spacing rule: text/word/line spacing readable; screens neither
+   big nor tight for no reason. Tight spots are noted for next module,
+   not over-fixed here. */
+
+:root {
+  --navy: #16233f;
+  --navy-2: #1e3054;
+  --navy-3: #24365e;
+  --blue: #2563eb;
+  --blue-light: #38bdf8;
+  --ink: #1f2937;
+  --ink-soft: #4b5563;
+  --ink-faint: #6b7280;
+  --line: #d7dde8;
+  --bg: #f4f6fb;
+  --panel: #ffffff;
+  --panel-soft: #eef2f9;
+  --green: #15803d;
+  --amber: #b45309;
+  --red: #b91c1c;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  word-spacing: 0.02em;
+  color: var(--ink);
+  background: var(--bg);
+}
+
+#app {
+  height: calc(100vh - 34px); /* room for the status bar */
+  overflow: hidden;
+}
+
+.screen {
+  height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden { display: none !important; }
+
+/* --- brand header (shared) --- */
+.brandbar {
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  flex: 0 0 auto;
+}
+
+.brandbar img.logo { width: 40px; height: 40px; flex: 0 0 auto; }
+
+.brandbar .brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.brandbar .brand-sub {
+  font-size: 13px;
+  color: #bcd0f5;
+  letter-spacing: 0.02em;
+}
+
+.brandbar .spacer { flex: 1; }
+
+.brandbar .brand-meta {
+  font-size: 13px;
+  color: #dbe7ff;
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* --- buttons --- */
+.btn {
+  font: inherit;
+  font-size: 14px;
+  padding: 9px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--blue);
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+.btn:hover { background: #1d4ed8; }
+.btn:disabled { opacity: 0.55; cursor: default; }
+
+.btn-secondary {
+  background: #fff;
+  color: var(--navy);
+  border-color: var(--line);
+}
+
+.btn-secondary:hover { background: var(--panel-soft); }
+
+.btn-ghost {
+  background: transparent;
+  color: #dbe7ff;
+  border-color: transparent;
+}
+
+.btn-ghost:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* --- forms --- */
+.field { margin-bottom: 16px; }
+
+.field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  margin-bottom: 5px;
+  letter-spacing: 0.02em;
+}
+
+.field label .req { color: var(--red); }
+
+.field input[type="text"],
+.field input[type="password"],
+.field input[type="email"],
+.field input[type="tel"],
+.field input[type="date"],
+.field input[type="number"],
+.field select,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1.5;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  color: var(--ink);
+}
+
+.field textarea { resize: vertical; min-height: 74px; }
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: 0;
+  border-color: var(--blue);
+}
+
+.field input:disabled,
+.field select:disabled,
+.field textarea:disabled {
+  background: var(--panel-soft);
+  color: var(--ink-faint);
+}
+
+.field .hint {
+  font-size: 12.5px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+
+.field-row {
+  display: flex;
+  gap: 16px;
+}
+
+.field-row .field { flex: 1; min-width: 0; }
+
+.form-error {
+  color: var(--red);
+  font-size: 13.5px;
+  margin: 4px 0 12px;
+  min-height: 20px;
+  line-height: 1.5;
+}
+
+/* --- status bar (always visible, bottom) --- */
+#statusbar {
+  height: 34px;
+  background: var(--navy);
+  color: #dbe7ff;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 0 14px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#statusbar .sb-state { font-weight: 700; color: #fff; }
+#statusbar .sb-state.saving { color: #fbbf24; }
+#statusbar .sb-path {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #bcd0f5;
+}
+
+#statusbar .sb-open {
+  background: transparent;
+  border: 1px solid #4a6396;
+  color: #dbe7ff;
+  font: inherit;
+  font-size: 12.5px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#statusbar .sb-open:hover { background: rgba(255, 255, 255, 0.12); }
+
+/* --- company list rows (Select Company) --- */
+.company-row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  background: #fff;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 13px 12px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.company-row:last-child { border-bottom: none; }
+.company-row:hover { background: var(--panel-soft); }
+.company-row:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+
+.company-row .cr-name {
+  display: block;
+  font-size: 15.5px;
+  font-weight: 600;
+  color: var(--navy);
+}
+
+.company-row .cr-meta {
+  display: block;
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin-top: 2px;
+}
+
+/* --- misc --- */
+.page {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 26px 28px;
+}
+
+.page-narrow { max-width: 720px; margin: 0 auto; width: 100%; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+}
+
+h1.page-title {
+  font-size: 20px;
+  margin: 0 0 6px;
+  color: var(--navy);
+  letter-spacing: 0.01em;
+}
+
+p.page-sub {
+  margin: 0 0 18px;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.kbd-hint {
+  font-size: 13px;
+  color: var(--ink-faint);
+  line-height: 1.6;
+}
+
+.kbd-hint b { color: var(--ink-soft); }

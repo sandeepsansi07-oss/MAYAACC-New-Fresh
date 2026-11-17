@@ -1,0 +1,110 @@
+/* MAYAACC — Step 0
+   wizard.css — company creation wizard.
+   The 4 top buttons are REAL tabs: clickable, and the active one
+   is dark (navy) like a pressed tab. */
+
+.wizard-wrap {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 26px 28px;
+}
+
+.wizard-inner { max-width: 860px; margin: 0 auto; }
+
+/* --- tabs --- */
+.wizard-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 20px;
+}
+
+.wizard-tab {
+  flex: 1;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  padding: 11px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+  text-align: center;
+}
+
+.wizard-tab:hover { background: var(--panel-soft); }
+
+.wizard-tab .tab-num {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  line-height: 22px;
+  border-radius: 50%;
+  background: var(--panel-soft);
+  color: var(--navy);
+  font-size: 12.5px;
+  margin-right: 7px;
+  vertical-align: 1px;
+}
+
+.wizard-tab.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: #fff;
+}
+
+.wizard-tab.active .tab-num {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* --- panels --- */
+.wizard-panel { display: none; }
+.wizard-panel.active { display: block; }
+
+.wizard-panel .card { padding: 22px 24px; }
+
+.wizard-panel h2 {
+  font-size: 17px;
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+
+.wizard-panel .panel-sub {
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  line-height: 1.55;
+}
+
+/* --- footer nav --- */
+.wizard-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.wizard-nav .spacer { flex: 1; }
+
+/* --- security toggle --- */
+.security-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel-soft);
+  margin-bottom: 16px;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+.security-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--blue);
+  cursor: pointer;
+}
+
+.security-toggle b { color: var(--navy); }

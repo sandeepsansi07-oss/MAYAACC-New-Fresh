@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAYAACC</title>
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/setup.css">
+<link rel="stylesheet" href="css/wizard.css">
+<link rel="stylesheet" href="css/gateway.css">
+<link rel="stylesheet" href="css/dialog.css">
+<link rel="stylesheet" href="css/masters.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ SCREEN 1: FIRST-RUN SETUP (only once) ============ -->
+  <section id="screen-setup" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Smart Accounting for Indian Businesses</div>
+      </div>
+    </div>
+    <div class="setup-wrap">
+      <div class="setup-card">
+        <div class="logo-row">
+          <img src="assets/logo.svg" alt="MAYAACC logo">
+          <h1>Welcome to MAYAACC</h1>
+        </div>
+        <p class="setup-sub">First time setup. Create your username and password.
+          This stays on your PC only — the app will open straight to your
+          companies after this, no login screen.</p>
+        <form id="setup-form" novalidate>
+          <div class="field">
+            <label for="setup-username">Username <span class="req">*</span></label>
+            <input type="text" id="setup-username" autocomplete="off" placeholder="e.g. sandeep">
+          </div>
+          <div class="field">
+            <label for="setup-password">Password <span class="req">*</span></label>
+            <input type="password" id="setup-password" autocomplete="new-password" placeholder="Minimum 4 characters">
+          </div>
+          <div class="field">
+            <label for="setup-confirm">Confirm Password <span class="req">*</span></label>
+            <input type="password" id="setup-confirm" autocomplete="new-password" placeholder="Type the password again">
+          </div>
+          <div class="form-error" id="setup-error" role="alert"></div>
+          <button type="submit" class="btn" id="setup-submit">Create &amp; Continue</button>
+        </form>
+        <p class="setup-note">Your password is stored on this PC only, as a salted
+          SHA-256 hash. It is never sent anywhere.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: SELECT COMPANY ============ -->
+  <section id="screen-companies" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Select Company</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="brand-meta" id="companies-meta"></div>
+    </div>
+    <div class="page">
+      <div class="page-narrow">
+        <h1 class="page-title">Select Company</h1>
+        <p class="page-sub" id="companies-sub">Choose a company to open, or create a new one.</p>
+        <div class="card" style="padding: 10px 12px;">
+          <div id="company-list"></div>
+          <div id="company-empty" class="hidden" style="padding: 14px 10px; color: var(--ink-soft); line-height: 1.55;">
+            No company yet. Create your first company to begin.
+          </div>
+        </div>
+        <div style="margin-top: 16px; display: flex; gap: 10px;">
+          <button class="btn" id="btn-new-company">Create New Company</button>
+        </div>
+        <p class="kbd-hint" style="margin-top: 18px;">
+          Tip: click a company row to open it, or use <b>Tab</b> and <b>Enter</b>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: COMPANY CREATION WIZARD ============ -->
+  <section id="screen-wizard" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Create Company</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="wizard-cancel-top">Cancel (Esc)</button>
+    </div>
+    <div class="wizard-wrap">
+      <div class="wizard-inner">
+        <h1 class="page-title">Create a New Company</h1>
+        <p class="page-sub">Fill the four steps. The tabs above are real tabs —
+          click any of them to jump to that step.</p>
+
+        <div class="wizard-tabs" role="tablist" aria-label="Company creation steps">
+          <button type="button" class="wizard-tab active" data-tab="details" role="tab" aria-selected="true">
+            <span class="tab-num">1</span>Company Details
+          </button>
+          <button type="button" class="wizard-tab" data-tab="tax" role="tab" aria-selected="false">
+            <span class="tab-num">2</span>Tax &amp; GST
+          </button>
+          <button type="button" class="wizard-tab" data-tab="accounting" role="tab" aria-selected="false">
+            <span class="tab-num">3</span>Accounting
+          </button>
+          <button type="button" class="wizard-tab" data-tab="security" role="tab" aria-selected="false">
+            <span class="tab-num">4</span>Security
+          </button>
+        </div>
+
+        <form id="wizard-form" novalidate>
+          <!-- STEP 1 -->
+          <div class="wizard-panel active" data-panel="details" role="tabpanel">
+            <div class="card">
+              <h2>Company Details</h2>
+              <p class="panel-sub">Name and address of the business.</p>
+              <div class="field">
+                <label for="c-name">Company Name <span class="req">*</span></label>
+                <input type="text" id="c-name" autocomplete="off" placeholder="e.g. Sharma Traders">
+              </div>
+              <div class="field">
+                <label for="c-mailing">Mailing Name</label>
+                <input type="text" id="c-mailing" autocomplete="off" placeholder="Name as it appears on bills (optional)">
+              </div>
+              <div class="field">
+                <label for="c-address">Address</label>
+                <textarea id="c-address" rows="3" placeholder="Shop / office address. Press Enter for a new line, Enter twice to move to the next field."></textarea>
+                <div class="hint">Enter = new line &nbsp;·&nbsp; Enter twice = next field</div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-state">State</label>
+                  <select id="c-state"></select>
+                </div>
+                <div class="field">
+                  <label for="c-country">Country</label>
+                  <input type="text" id="c-country" value="India" autocomplete="off">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-phone">Phone</label>
+                  <input type="tel" id="c-phone" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="c-mobile">Mobile</label>
+                  <input type="tel" id="c-mobile" autocomplete="off">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-email">Email</label>
+                  <input type="email" id="c-email" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="c-website">Website</label>
+                  <input type="text" id="c-website" autocomplete="off">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="wizard-panel" data-panel="tax" role="tabpanel">
+            <div class="card">
+              <h2>Tax &amp; GST</h2>
+              <p class="panel-sub">GST and tax registration of the business.</p>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-gstin">GSTIN</label>
+                  <input type="text" id="c-gstin" autocomplete="off" placeholder="15-character GSTIN (optional)">
+                </div>
+                <div class="field">
+                  <label for="c-pan">PAN</label>
+                  <input type="text" id="c-pan" autocomplete="off" placeholder="10-character PAN (optional)">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-taxtype">Tax Type</label>
+                  <select id="c-taxtype">
+                    <option value="Regular">Regular</option>
+                    <option value="Composition">Composition</option>
+                    <option value="Unregistered">Unregistered</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="c-gstdate">GST Registration Date</label>
+                  <input type="date" id="c-gstdate">
+                </div>
+              </div>
+              <div class="field">
+                <label for="c-pos">Place of Supply (State)</label>
+                <select id="c-pos"></select>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="wizard-panel" data-panel="accounting" role="tabpanel">
+            <div class="card">
+              <h2>Accounting</h2>
+              <p class="panel-sub">Financial year and currency settings.</p>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-fystart">Financial Year Starts <span class="req">*</span></label>
+                  <input type="date" id="c-fystart" value="2026-04-01">
+                </div>
+                <div class="field">
+                  <label for="c-booksfrom">Books Beginning From <span class="req">*</span></label>
+                  <input type="date" id="c-booksfrom" value="2026-04-01">
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <label for="c-currency">Currency</label>
+                  <select id="c-currency">
+                    <option value="INR" selected>INR — Indian Rupee (₹)</option>
+                    <option value="USD">USD — US Dollar ($)</option>
+                    <option value="EUR">EUR — Euro (€)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="c-decimals">Decimals</label>
+                  <select id="c-decimals">
+                    <option value="0">0</option>
+                    <option value="2" selected>2</option>
+                    <option value="3">3</option>
+                  </select>
+                </div>
+              </div>
+              <p class="hint" style="color: var(--ink-faint); font-size: 13px; line-height: 1.55;">
+                Books beginning date is the first date for which vouchers can be entered.
+                It is usually the same as the financial year start.
+              </p>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="wizard-panel" data-panel="security" role="tabpanel">
+            <div class="card">
+              <h2>Security</h2>
+              <p class="panel-sub">Optional password protection for this company.</p>
+              <label class="security-toggle" for="c-pwdsecurity">
+                <input type="checkbox" id="c-pwdsecurity">
+                <span><b>Password Security ON</b><br>
+                When ON, opening this company asks for its password (once per app run).
+                When OFF, the company opens directly.</span>
+              </label>
+              <div class="field">
+                <label for="c-pwd">Company Password</label>
+                <input type="password" id="c-pwd" autocomplete="new-password" disabled>
+              </div>
+              <div class="field">
+                <label for="c-pwdconfirm">Confirm Company Password</label>
+                <input type="password" id="c-pwdconfirm" autocomplete="new-password" disabled>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-error" id="wizard-error" role="alert"></div>
+
+          <div class="wizard-nav">
+            <button type="button" class="btn btn-secondary" id="wizard-back">← Back</button>
+            <div class="spacer"></div>
+            <button type="button" class="btn btn-secondary" id="wizard-cancel">Cancel</button>
+            <button type="button" class="btn" id="wizard-next">Next →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 4: MAIN SCREEN (GATEWAY) ============ -->
+  <section id="screen-gateway" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub" id="gateway-company-sub">Gateway</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="brand-meta" id="gateway-meta"></div>
+    </div>
+    <div class="gateway-wrap">
+      <div class="gateway-grid">
+        <div class="card gateway-menu">
+          <h2>Gateway of MAYAACC</h2>
+          <button type="button" class="menu-item" id="menu-select-company">Select Company <span class="key">F3</span></button>
+          <button type="button" class="menu-item" id="menu-new-company">Create New Company</button>
+          <hr class="menu-sep">
+          <button type="button" class="menu-item" id="menu-masters">Masters</button>
+          <button type="button" class="menu-item" disabled>Vouchers <span class="step-tag">Step 2</span></button>
+          <button type="button" class="menu-item" disabled>Display Reports <span class="step-tag">Step 3</span></button>
+          <button type="button" class="menu-item" disabled>Inventory <span class="step-tag">Step 4</span></button>
+          <button type="button" class="menu-item" disabled>GST <span class="step-tag">Step 5</span></button>
+          <button type="button" class="menu-item" disabled>Print &amp; Invoice Designer <span class="step-tag">Step 6</span></button>
+        </div>
+        <div class="gateway-info">
+          <div class="card">
+            <h1 class="page-title" id="gw-company-name" style="margin-bottom: 2px;">—</h1>
+            <p class="page-sub" id="gw-company-line" style="margin-bottom: 0;">—</p>
+            <div class="info-grid">
+              <div class="info-cell">
+                <div class="lbl">Current Date</div>
+                <div class="val big" id="gw-date">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">Current Period</div>
+                <div class="val big" id="gw-period">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">Financial Year</div>
+                <div class="val" id="gw-fy">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">Last Activity</div>
+                <div class="val" id="gw-last-activity">—</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h2 style="font-size: 15px; margin: 0 0 6px; color: var(--navy);">Company Details</h2>
+            <div class="info-grid">
+              <div class="info-cell">
+                <div class="lbl">GSTIN</div>
+                <div class="val" id="gw-gstin">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">PAN</div>
+                <div class="val" id="gw-pan">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">Tax Type</div>
+                <div class="val" id="gw-taxtype">—</div>
+              </div>
+              <div class="info-cell">
+                <div class="lbl">Currency</div>
+                <div class="val" id="gw-currency">—</div>
+              </div>
+            </div>
+          </div>
+          <p class="kbd-hint">
+            <b>F2</b> Change Date &nbsp;·&nbsp; <b>Alt+F2</b> Change Period &nbsp;·&nbsp;
+            <b>F3</b> Select Company &nbsp;·&nbsp; <b>Esc</b> Back to Select Company
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ============ SCREEN 5: MASTERS MENU ============ -->
+  <section id="screen-masters" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Masters</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="masters-back">← Back (Esc)</button>
+    </div>
+    <div class="masters-wrap">
+      <div class="masters-inner">
+        <h1 class="page-title">Masters</h1>
+        <p class="page-sub" id="masters-company-sub">Company: <span id="masters-company">—</span></p>
+        <div class="card" style="padding: 8px;">
+          <div class="masters-menu-list" id="masters-menu-list"></div>
+        </div>
+        <p class="kbd-hint" style="margin-top: 18px;">
+          <b>↑ ↓</b> move &nbsp;·&nbsp; <b>Enter</b> open &nbsp;·&nbsp; <b>Esc</b> back to Gateway
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 6: MASTER LIST ============ -->
+  <section id="screen-master-list" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Masters</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="master-list-back">← Masters (Esc)</button>
+    </div>
+    <div class="masters-wrap">
+      <div class="masters-inner">
+        <h1 class="page-title" id="master-list-title">—</h1>
+        <p class="page-sub" id="master-list-sub">—</p>
+        <input type="text" class="master-search" id="master-list-search"
+               placeholder="Type to search…" autocomplete="off">
+        <p class="master-count" id="master-list-count">—</p>
+        <div class="master-list" id="master-list"></div>
+        <p class="kbd-hint" style="margin-top: 18px;">
+          <b>↑ ↓</b> move in list &nbsp;·&nbsp; <b>Enter</b> open &nbsp;·&nbsp; <b>Esc</b> back to Masters
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 7: MASTER FORM (create / edit) ============ -->
+  <section id="screen-master-form" class="screen hidden">
+    <div class="brandbar">
+      <img class="logo" src="assets/logo.svg" alt="MAYAACC logo">
+      <div>
+        <div class="brand-name">MAYAACC</div>
+        <div class="brand-sub">Masters</div>
+      </div>
+      <div class="spacer"></div>
+      <button class="btn btn-ghost" id="master-form-back">← Back (Esc)</button>
+    </div>
+    <div class="masters-wrap">
+      <div class="masters-inner">
+        <h1 class="page-title" id="master-form-title">—</h1>
+        <p class="page-sub">Enter moves to the next field. Ctrl+A accepts the form. Esc cancels.</p>
+        <div class="card">
+          <div id="master-form-fields"></div>
+          <div class="form-error" id="master-form-error" role="alert"></div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="master-form-cancel">Cancel (Esc)</button>
+            <button type="button" class="btn" id="master-form-save">Save (Ctrl+A)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ DIALOGS ============ -->
+<div id="dialog-overlay" class="hidden">
+  <div class="dialog hidden" id="dlg-change-date" role="dialog" aria-modal="true" aria-labelledby="dlg-date-title">
+    <h2 id="dlg-date-title">Change Date</h2>
+    <p class="dlg-sub">Current working date for entries. Press Enter to apply, Esc to cancel.</p>
+    <div class="field">
+      <label for="dlg-date-input">New Date</label>
+      <input type="date" id="dlg-date-input">
+    </div>
+    <div class="form-error" id="dlg-date-error" role="alert"></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-secondary" id="dlg-date-cancel">Cancel (Esc)</button>
+      <button type="button" class="btn" id="dlg-date-ok">Apply (Enter)</button>
+    </div>
+  </div>
+
+  <div class="dialog hidden" id="dlg-change-period" role="dialog" aria-modal="true" aria-labelledby="dlg-period-title">
+    <h2 id="dlg-period-title">Change Period</h2>
+    <p class="dlg-sub">The period shown on reports. Press Enter to apply, Esc to cancel.</p>
+    <div class="field-row">
+      <div class="field">
+        <label for="dlg-period-from">From</label>
+        <input type="date" id="dlg-period-from">
+      </div>
+      <div class="field">
+        <label for="dlg-period-to">To</label>
+        <input type="date" id="dlg-period-to">
+      </div>
+    </div>
+    <div class="form-error" id="dlg-period-error" role="alert"></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-secondary" id="dlg-period-cancel">Cancel (Esc)</button>
+      <button type="button" class="btn" id="dlg-period-ok">Apply (Enter)</button>
+    </div>
+  </div>
+
+  <div class="dialog dialog-picker hidden" id="dlg-picker" role="dialog" aria-modal="true" aria-labelledby="dlg-picker-title">
+    <h2 id="dlg-picker-title">Select</h2>
+    <p class="dlg-sub">Type to search. Arrow keys move the list, Enter selects, Esc cancels.</p>
+    <div class="field" style="margin-bottom: 8px;">
+      <input type="text" id="dlg-picker-search" placeholder="Type to search…" autocomplete="off">
+    </div>
+    <div class="picker-list" id="dlg-picker-list" role="listbox"></div>
+    <div class="dlg-actions">
+      <button type="button" class="btn btn-secondary" id="dlg-picker-cancel">Cancel (Esc)</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ STATUS BAR (always visible) ============ -->
+<footer id="statusbar">
+  <span class="sb-state" id="sb-state">Ready</span>
+  <span class="sb-path" id="sb-path" title="">Documents\MAYAACC-Data\mayaacc-data.json</span>
+  <span id="sb-time">Not saved yet</span>
+  <button type="button" class="sb-open" id="sb-open-folder">Open Folder</button>
+</footer>
+
+<script src="js/util.js"></script>
+<script src="js/crypto.js"></script>
+<script src="js/store.js"></script>
+<script src="js/dialogs.js"></script>
+<script src="js/setup.js"></script>
+<script src="js/company-select.js"></script>
+<script src="js/wizard.js"></script>
+<script src="js/gateway.js"></script>
+<script src="js/masters.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
